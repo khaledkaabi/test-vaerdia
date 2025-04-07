@@ -1,10 +1,13 @@
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+
+const App = React.lazy(() => import("./App"));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <React.Suspense fallback={<p>Chargement de l'application...</p>}>
+      <App />
+    </React.Suspense>
   </StrictMode>,
 )
