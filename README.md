@@ -1,4 +1,4 @@
-# React + TypeScript + Vite + Tailwind CSS + Recharts
+# React + TypeScript + Vite + Tailwind CSS + Recharts + MaterialUi
 
 ## Démarrage du projet
 

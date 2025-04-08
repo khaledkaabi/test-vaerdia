@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
 import { fetchNEOs } from "../services/neoService";
-import NEOBarChart from "../components/NeoBarChart";
+import NeoBarChart from "../components/NeoBarChart";
 import { ChartData } from "../types/chart";
 import { NEO } from "../types/neo";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {
+    Box,
+    Tab,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Select,
+    SelectChangeEvent
+} from '@mui/material';
+import {
+    TabContext,
+    TabList,
+    TabPanel
+} from '@mui/lab';
+
+import NeoTableView from "../components/NeoTableView";
 
 const Home: React.FC = () => {
     const [data, setData] = useState<ChartData[]>([]);
@@ -15,6 +27,7 @@ const Home: React.FC = () => {
     const [selectedBody, setSelectedBody] = useState<string>("All");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [selectedView, setSelectedView] = useState<string>("Chart");
 
     useEffect(() => {
         const getData = async () => {
@@ -36,7 +49,6 @@ const Home: React.FC = () => {
                         };
                     })
                     .sort((a, b) => b.avg - a.avg)
-                    .slice(0, 50); // prendre top 50 par défaut
 
                 const uniqueBodies = Array.from(
                     new Set(formatted.map((item) => item.orbitingBody))
@@ -67,6 +79,11 @@ const Home: React.FC = () => {
 
     };
 
+    const handleChangeView = (_event: React.SyntheticEvent, newValue: string) => {
+        setSelectedView(newValue);
+    };
+
+
     if (loading) return <p>Chargement...</p>;
     if (error) return <p>{error}</p>;
 
@@ -76,7 +93,7 @@ const Home: React.FC = () => {
 
             <div className="mb-6">
                 <FormControl fullWidth sx={{ maxWidth: 300 }}>
-                    <InputLabel id="orbiting-body-label">Orbital Body</InputLabel>
+                    <InputLabel id="orbiting-body-label">Orbiting Body</InputLabel>
                     <Select
                         labelId="orbiting-body-label"
                         id="orbiting-body"
@@ -93,7 +110,23 @@ const Home: React.FC = () => {
                 </FormControl>
             </div>
 
-            <NEOBarChart data={filteredData} />
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={selectedView}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={handleChangeView} aria-label="lab API tabs example">
+                            <Tab label="Chart View" value="Chart" />
+                            <Tab label="Table View" value="Table" />
+                        </TabList>
+                    </Box>
+                    <TabPanel value="Chart">
+                        <NeoBarChart data={filteredData} />
+                    </TabPanel>
+                    <TabPanel value="Table">
+                        <NeoTableView data={filteredData} />
+                    </TabPanel>
+                </TabContext>
+            </Box>
+
         </div>
     );
 };
