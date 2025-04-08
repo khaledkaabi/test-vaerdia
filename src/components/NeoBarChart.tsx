@@ -30,7 +30,7 @@ const NEOBarChart: React.FC<Props> = ({ data }) => {
                         value: 'NEO Name',
                         angle: -90,
                         position: 'insideLeft',
-                        offset: -30,
+                        offset: -45,
                         style: { textAnchor: 'middle', fontSize: 16 }
                     }}
                 />
